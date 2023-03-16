@@ -10,6 +10,7 @@ import com.zwf.sudo.utils.ValidateCodeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -22,13 +23,14 @@ import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/user")
 @Slf4j
 public class UserController {
 
-    @Autowired
+    @Resource
     private JavaMailSender mailSender;
 
 
@@ -37,6 +39,10 @@ public class UserController {
 
     @Resource
     private UserService userService;
+
+
+    @Resource
+    private RedisTemplate redisTemplate;
   /*  //获取验证码
     @PostMapping("/sendMsg")
     public R<String> sendMsg(HttpSession session, @RequestBody User user){
@@ -94,7 +100,9 @@ public class UserController {
             try {
                 mailSender.send(message);
                 //需要保存一下验证码，后面用来验证
-                session.setAttribute(phone, code);
+                //session.setAttribute(phone, code);
+
+                redisTemplate.opsForValue().set(phone,code,5, TimeUnit.MINUTES);
                 return R.success("发送成功");
             } catch (MailException e) {
                 e.printStackTrace();
@@ -112,9 +120,15 @@ public class UserController {
         //获取验证码，用户输入的
         String code = map.get("code").toString();
         //获取session中保存的验证码
-        Object sessionCode = session.getAttribute(phone);
+        //Object sessionCode = session.getAttribute(phone);
+
+        Object sessionCode = redisTemplate.opsForValue().get(phone);
         //如果session的验证码和用户输入的验证码进行比对,&&同时
         if (sessionCode != null && sessionCode.equals(code)) {
+
+            redisTemplate.delete(phone);
+            //验证成功，查询是否已经注册
+            log.info("验证成功");
             //要是User数据库没有这个邮箱则自动注册,先看看输入的邮箱是否存在数据库
             LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(User::getPhone,phone);
