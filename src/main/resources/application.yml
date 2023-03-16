@@ -1,0 +1,58 @@
+server:
+  port: 80
+spring:
+
+
+  mail:
+
+    #smtp服务主机  163邮箱则为smtp.163.com
+    host: smtp.qq.com
+    #服务协议
+    protocol: smtp
+    # 编码集
+    default-encoding: UTF-8
+    #发送邮件的账户
+    username: 734243326@qq.com
+    #授权码
+    password: ownhzhqywcsqbcgj
+    test-connection: true
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/suda?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: root
+      password: zhang123
+  main:
+    banner-mode: off
+    #应用名称，可选
+  application:
+    name: reggie_takeout
+
+mybatis-plus:
+  configuration:
+    #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，开启按照驼峰命名法映射。例如address_book映射成AddressBook
+    map-underscore-to-camel-case: true
+    #    mysql的日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      #id生成策略是ASSIGN_ID
+      id-type: ASSIGN_ID
+    banner: false
+#      如果表名有前缀，为了和实体类对应上，设置前缀。或者在实体类@TableName
+#      table-prefix: tbl_
+
+reggie:
+  path: D:\\img\\
+
+
+
