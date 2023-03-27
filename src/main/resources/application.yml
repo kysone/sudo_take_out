@@ -19,7 +19,7 @@ spring:
         driver-class-name: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://127.0.0.1:3306/suda?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
         username: root
-        password: zhang123
+        password: xxx
     #配置主从信息
     masterslave:
       ## 从库的负载均衡算法类型，round_robin意思是几个从库轮流查询
@@ -53,9 +53,9 @@ spring:
     # 编码集
     default-encoding: UTF-8
     #发送邮件的账户
-    username: 734243326@qq.com
+    username: xxxx
     #授权码
-    password: ownhzhqywcsqbcgj
+    password: xxxx
     test-connection: true
     properties:
       mail:
